@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sites</title>
+</head>
+<body>
+    <script>
+        
+        //fetch the data from the server an then call the recursive fuction
+        //if there is an error catch it 
+        fetch('http://localhost:8000/sites')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                console.log((typeof data));
+                iterateOverData(data);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+
+        //recursive function that iterate over all the data
+        const iterateOverData = function (data) {
+
+        data.forEach((object) => {
+
+        const displayData = (obj) => {
+        //creating element for each attrbuite
+        let objContainer = document.createElement("div");
+        let idElement = document.createElement("p");
+        let nameElement = document.createElement("p");
+        let urlElement = document.createElement("a");
+        objContainer.style.border="thin dotted blue";
+        //
+        idElement.textContent = "ID: " + obj["id"];
+        objContainer.appendChild(idElement);
+        nameElement.textContent = "Name: " + obj.name;
+        objContainer.appendChild(nameElement);
+        urlElement.textContent = obj.url;
+        urlElement.href = obj.url;
+        objContainer.appendChild(urlElement);
+        //if we have a subdata call the fuction with the  subdata
+        if (obj.subData) {
+            iterateOverData(obj.subData);
+            objContainer.style.border="thin dotted red";
+
+        }
+
+
+        return objContainer;
+    };
+    //append the container to the page 
+    document.body.appendChild(displayData(object));
+
+});
+
+
+};
+    </script>
+</body>
+
+</html>
